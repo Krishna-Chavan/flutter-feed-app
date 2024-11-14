@@ -1,0 +1,47 @@
+name: Build Android Flutter App
+
+on:
+  push:
+    branches:
+      - Build_branch
+  pull_request:
+    branches:
+      - Build_branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Install Flutter SDK
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+
+      # Install required Android dependencies
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y openjdk-11-jdk
+          yes | sdkmanager --licenses
+          flutter doctor
+
+      # Get Flutter packages
+      - name: Install Flutter Packages
+        run: flutter pub get
+
+      # Build the Android app
+      - name: Build APK
+        run: flutter build apk --release
+
+      # Optionally, upload the generated APK as an artifact
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
