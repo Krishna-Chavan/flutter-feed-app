@@ -37,13 +37,20 @@ jobs:
           flutter channel stable
           flutter upgrade
 
-      # Install required Android dependencies
-      - name: Install Dependencies
+            # Install required Android dependencies
+      - name: Install Android SDK and JDK
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y openjdk-11-jdk
+          sudo apt-get install -y openjdk-11-jdk wget unzip
+          wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O commandlinetools.zip
+          mkdir -p $HOME/android-sdk/cmdline-tools
+          unzip commandlinetools.zip -d $HOME/android-sdk/cmdline-tools
+          mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
+          export ANDROID_HOME=$HOME/android-sdk
+          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
           yes | sdkmanager --licenses
-          flutter doctor
+          sdkmanager "platform-tools" "platforms;android-33"
+
 
       # Get Flutter packages
       - name: Install Flutter Packages
