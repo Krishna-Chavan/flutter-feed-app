@@ -59,9 +59,13 @@ jobs:
           flutter-version: '2.10.5' # Adjust to a version supporting older Dart
 
 
-      # Build the Android app
+     # Build the Android app
+      - name: Clean Build Cache
+        run: flutter clean
+      
       - name: Build APK
         run: flutter build apk --release
+
 
       # Optionally, upload the generated APK as an artifact
       - name: Upload APK
