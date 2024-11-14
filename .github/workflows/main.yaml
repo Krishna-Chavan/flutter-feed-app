@@ -17,11 +17,17 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Install Flutter SDK
+           # Install Flutter SDK
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: 'stable'
+
+      # Ensure Flutter is using the stable channel and upgrade it
+      - name: Switch to Stable Channel
+        run: |
+          flutter channel stable
+          flutter upgrade
 
       # Install required Android dependencies
       - name: Install Dependencies
